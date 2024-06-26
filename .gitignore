@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 node_modules/
 .env
+=======
+/node_modules
+>>>>>>> ba30f43 (commit package jason push)
