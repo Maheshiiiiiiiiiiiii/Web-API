@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const Train = require('../models/Train');
 const Location = require('../models/Location');
-const engineChangeHandler = require('../utils/engineChangeHandler');
+const handleEngineChange = require('../utils/engineChangeHandler');
 const networkRetryHandler = require('../utils/networkRetryHandler');
 
 exports.receiveGPSData = async (req, res) => {
@@ -19,7 +19,9 @@ exports.receiveGPSData = async (req, res) => {
       direction,
     });
 
-    await location.save();
+    // Attempt to save the location with retry mechanism
+    await networkRetryHandler(async () => await location.save());
+
     res.status(201).json(location);
   } catch (error) {
     res.status(500).json({ error: 'Failed to save location data' });
@@ -63,20 +65,8 @@ exports.changeEngine = async (req, res) => {
   const { newEngine } = req.body;
 
   try {
-    const train = await Train.findById(id);
-    if (!train) {
-      return res.status(404).json({ error: 'Train not found' });
-    }
-
-    if (!train.engine_history) {
-      train.engine_history = [];
-    }
-
-    train.engine_history.push(train.current_engine);
-    train.current_engine = newEngine;
-
-    await train.save();
-    res.status(200).json(train);
+    await handleEngineChange(id, newEngine);
+    res.status(200).json({ message: 'Engine changed successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to change engine' });
   }
