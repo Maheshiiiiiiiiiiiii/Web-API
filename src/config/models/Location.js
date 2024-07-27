@@ -10,4 +10,4 @@ const LocationSchema = new mongoose.Schema({
   direction: { type: Number, required: true },
 });
 
-module.exports = mongoose.model('Location', Location)
+module.exports = mongoose.model('Location', LocationSchema);
