@@ -1,8 +1,8 @@
+const { v4: uuidv4 } = require('uuid');
 const Train = require('../models/Train');
 const Location = require('../models/Location');
-const engineChangeHandler = require('../utils/engineChangeHandler');
+const handleEngineChange = require('../utils/engineChangeHandler');
 const networkRetryHandler = require('../utils/networkRetryHandler');
-const { v4: uuidv4 } = require('uuid');
 
 // Receive GPS Data
 exports.receiveGPSData = async (req, res) => {
@@ -20,12 +20,8 @@ exports.receiveGPSData = async (req, res) => {
       direction,
     });
 
-    // Save the location with retry mechanism
-    await networkRetryHandler({
-      method: 'post',
-      url: process.env.MONGO_URI, // Use the MongoDB URI from environment variables
-      data: location
-    });
+    // Attempt to save the location with retry mechanism
+    await networkRetryHandler(() => location.save());
 
     res.status(201).json(location);
   } catch (error) {
@@ -74,14 +70,8 @@ exports.changeEngine = async (req, res) => {
   const { newEngine } = req.body;
 
   try {
-    const train = await Train.findById(id);
-    if (!train) {
-      return res.status(404).json({ error: 'Train not found' });
-    }
-
-    await engineChangeHandler(id, newEngine);
-
-    res.status(200).json(train);
+    await handleEngineChange(id, newEngine);
+    res.status(200).json({ message: 'Engine changed successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to change engine' });
   }
