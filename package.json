@@ -8,16 +8,18 @@
         "dev": "nodemon server.js"
     },
     "dependencies": {
-        "dotenv": "^16.0.3",
-        "express": "^4.18.2",
-        "mongoose": "^7.0.1",
-        "node": "^20.16.0",
-        "uuid": "^9.0.0"
+        "bcryptjs": "^2.4.3",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^7.8.0",
+        "uuid": "^10.0.0"
     },
     "devDependencies": {
         "nodemon": "^2.0.22"
     },
     "keywords": [],
-    "author": "Maheshiiiii",
+    "author": "Your Name",
     "license": "ISC"
 }
+
