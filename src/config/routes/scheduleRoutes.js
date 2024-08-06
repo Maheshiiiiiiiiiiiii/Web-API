@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const scheduleController = require('../controllers/scheduleController');
+const scheduleController = require('../controllers/ScheduleController');
 
 // Create or Update Schedule
 router.post('/schedule', scheduleController.createOrUpdateSchedule);
