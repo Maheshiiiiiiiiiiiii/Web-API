@@ -37,3 +37,10 @@ This project is a Train Tracking API that allows you to track train schedules, r
 ## License
 
 This project is licensed under the MIT License.
+# Train Tracking API
+
+## Description
+
+This project is a Train Tracking API that allows users to track the real-time location of trains. The API provides endpoints to manage clients, trains, routes, schedules, and engine locations. The API also includes JWT-based authentication and Redis caching to improve performance.
+
+

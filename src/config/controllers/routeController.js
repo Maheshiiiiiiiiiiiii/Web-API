@@ -20,9 +20,9 @@ exports.createRoute = async (req, res) => {
     }
 };
 
-exports.getRoutes = async (req, res) => {
+exports.getAllRoutes = async (req, res) => {
     try {
-        const routes = await Route.find().populate('trains');
+        const routes = await Route.find();
         res.status(200).json(routes);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching routes', error });
@@ -33,7 +33,7 @@ exports.getRouteById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const route = await Route.findById(id).populate('trains');
+        const route = await Route.findById(id);
         if (!route) {
             return res.status(404).json({ message: 'Route not found' });
         }

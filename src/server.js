@@ -1,27 +1,33 @@
 const express = require('express');
 const connectDB = require('./config/db');
-const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const authRoutes = require('./routes/authRoutes');
-const clientRoutes = require('./routes/clientRoutes');
-const engineRoutes = require('./routes/engineRoutes');
-const scheduleRoutes = require('./routes/scheduleRoutes');
-const trainRoutes = require('./routes/trainRoutes');
-const routeRoutes = require('./routes/routeRoutes');
 
 dotenv.config();
 
+const authRoutes = require('./routes/authRoutes');
+const clientRoutes = require('./routes/clientRoutes');
+const engineRoutes = require('./routes/engineRoutes');
+const routeRoutes = require('./routes/routeRoutes');
+const scheduleRoutes = require('./routes/scheduleRoutes');
+const trainRoutes = require('./routes/trainRoutes');
+const locationRoutes = require('./routes/locationRoutes');
+
 const app = express();
 
-connectDB();
+app.use(express.json());
 
-app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/engines', engineRoutes);
+app.use('/api/routes', routeRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/trains', trainRoutes);
-app.use('/api/routes', routeRoutes);
+app.use('/api/locations', locationRoutes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+});
