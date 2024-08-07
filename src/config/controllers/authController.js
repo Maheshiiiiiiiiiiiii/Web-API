@@ -1,31 +1,40 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-require('dotenv').config();
+const bcrypt = require('bcrypt');
+const Client = require('../models/Client');
 
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
+    const { name, email, password } = req.body;
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newClient = new Client({
+            name,
+            email,
+            password: hashedPassword
+        });
 
-  try {
-    const user = new User({ username, password });
-    await user.save();
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(201).json({ token });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to register user' });
-  }
+        await newClient.save();
+        res.status(201).json({ message: 'Client registered successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error registering client', error });
+    }
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+    const { email, password } = req.body;
+    try {
+        const client = await Client.findOne({ email });
+        if (!client) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
 
-  try {
-    const user = await User.findOne({ username });
-    if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+        const isMatch = await bcrypt.compare(password, client.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+
+        const token = jwt.sign({ id: client._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ token });
+    } catch (error) {
+        res.status(500).json({ message: 'Error logging in', error });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ token });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to log in' });
-  }
 };
