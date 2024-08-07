@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
-const scheduleSchema = new mongoose.Schema({
+const MaintenanceAlertSchema = new mongoose.Schema({
     trainId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Train',
         required: true,
     },
-    departureTime: {
-        type: Date,
+    description: {
+        type: String,
         required: true,
     },
-    arrivalTime: {
+    alertDate: {
         type: Date,
         required: true,
     },
 });
 
-module.exports = mongoose.model('Schedule', scheduleSchema);
+module.exports = mongoose.model('Alert', AlertSchema);
