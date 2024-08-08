@@ -1,8 +1,8 @@
 const express = require('express');
-const { getClients } = require('../controllers/clientController');
+const { getLogs } = require('../controllers/monitoringController');
 const verifyToken = require('../utils/verifyToken');
 const router = express.Router();
 
-router.get('/', verifyToken, getClients);
+router.get('/', verifyToken, getLogs);
 
 module.exports = router;
