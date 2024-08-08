@@ -3,16 +3,6 @@
 
 This project is a Train Tracking API that allows you to track train schedules, routes, engines, and more.
 
-## Installation
-
-1. Clone the repository
-2. Install dependencies using `npm install`
-3. Create a `.env` file in the root directory with the following content:
-    ```
-    PORT=3000
-    MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_jwt_secret
-    ```
 
 ## Usage
 
