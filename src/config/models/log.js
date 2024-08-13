@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
-const clientSchema = new mongoose.Schema({
-    name: {
+const logSchema = new mongoose.Schema({
+    message: {
         type: String,
         required: true,
     },
-    email: {
+    level: {
         type: String,
+        enum: ['info', 'warning', 'error'],
         required: true,
-        unique: true,
     },
-    registeredAt: {
+    timestamp: {
         type: Date,
         default: Date.now,
     },
 });
 
-module.exports = mongoose.model('Client', clientSchema);
+module.exports = mongoose.model('Log', logSchema);
