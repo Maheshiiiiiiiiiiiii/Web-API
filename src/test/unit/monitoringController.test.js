@@ -2,25 +2,25 @@ const request = require('supertest');
 const app = require('../../server');
 const jwt = require('jsonwebtoken');
 
-describe('Schedule Controller', () => {
+describe('Monitoring Controller', () => {
     const token = jwt.sign({ id: 'testUserId' }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    it('should add a new schedule', async () => {
+    it('should log an activity', async () => {
         const res = await request(app)
-            .post('/api/schedules/add')
+            .post('/api/monitoring/log')
             .set('x-auth-token', token)
             .send({
-                trainId: 'trainId123',
-                date: '2024-08-13',
-                time: '10:00',
-                status: 'On Time',
+                endpoint: '/api/test',
+                method: 'GET',
+                status: '200',
+                responseTime: 50,
             });
         expect(res.statusCode).toEqual(201);
     });
 
-    it('should get all schedules', async () => {
+    it('should get all logs', async () => {
         const res = await request(app)
-            .get('/api/schedules/list')
+            .get('/api/monitoring/logs')
             .set('x-auth-token', token);
         expect(res.statusCode).toEqual(200);
     });
