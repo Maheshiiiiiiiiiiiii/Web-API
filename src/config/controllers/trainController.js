@@ -4,6 +4,7 @@ const Location = require('../models/Location');
 const handleEngineChange = require('../utils/engineChangeHandler');
 const networkRetryHandler = require('../utils/networkRetryHandler');
 
+// Receive GPS Data
 exports.receiveGPSData = async (req, res) => {
   const { id } = req.params;
   const { latitude, longitude, speed, direction, timestamp } = req.body;
@@ -28,6 +29,7 @@ exports.receiveGPSData = async (req, res) => {
   }
 };
 
+// Fetch All Train Data
 exports.fetchTrainData = async (req, res) => {
   try {
     const trains = await Train.find();
@@ -37,6 +39,7 @@ exports.fetchTrainData = async (req, res) => {
   }
 };
 
+// Fetch Specific Train Data
 exports.fetchSpecificTrainData = async (req, res) => {
   const { id } = req.params;
   try {
@@ -50,6 +53,7 @@ exports.fetchSpecificTrainData = async (req, res) => {
   }
 };
 
+// Fetch Train Location History
 exports.fetchTrainLocationHistory = async (req, res) => {
   const { id } = req.params;
   try {
@@ -60,6 +64,7 @@ exports.fetchTrainLocationHistory = async (req, res) => {
   }
 };
 
+// Change Engine
 exports.changeEngine = async (req, res) => {
   const { id } = req.params;
   const { newEngine } = req.body;

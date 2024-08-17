@@ -1,11 +1,18 @@
 const express = require('express');
-const router = express.Router();
-const trainController = require('../controllers/trainController');
+const {
+  receiveGPSData,
+  fetchTrainData,
+  fetchSpecificTrainData,
+  fetchTrainLocationHistory,
+  changeEngine,
+} = require('../controllers/trainController');
 
-router.post('/:id/locations', trainController.receiveGPSData);
-router.get('/', trainController.fetchTrainData);
-router.get('/:id', trainController.fetchSpecificTrainData);
-router.get('/:id/locations', trainController.fetchTrainLocationHistory);
-router.post('/:id/change-engine', trainController.changeEngine);
+const router = express.Router();
+
+router.post('/:id/location', receiveGPSData);
+router.get('/data', fetchTrainData);
+router.get('/data/:id', fetchSpecificTrainData);
+router.get('/location-history/:id', fetchTrainLocationHistory);
+router.post('/change-engine/:id', changeEngine);
 
 module.exports = router;
