@@ -17,10 +17,13 @@ const handleEngineChange = async (train_id, newEngine) => {
       throw new Error('Train not found');
     }
 
-    if (!train.engine_history) {
-      train.engine_history = [];
+    // If train has two engines, turn off one IoT device
+    if (train.current_engine && train.current_engine !== newEngine) {
+      // Logic to switch off one IoT device (to be implemented based on actual IoT setup)
+      console.log(`Switching off IoT device for engine ${train.current_engine}`);
     }
 
+    // Update train's engine information
     train.engine_history.push(train.current_engine);
     train.current_engine = newEngine;
     await train.save();

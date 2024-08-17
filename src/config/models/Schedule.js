@@ -5,6 +5,13 @@ const ScheduleSchema = new mongoose.Schema({
   route: { type: String, required: true },
   departureTime: { type: Date, required: true },
   arrivalTime: { type: Date, required: true },
+  train: { type: mongoose.Schema.Types.ObjectId, ref: 'Train', required: true },
+  date: { type: Date, required: true },
+  day: { type: String, required: true },
+  frequency: { type: String, enum: ['daily', 'weekdays', 'weekends'], required: true },
+  special: { type: Boolean, default: false }
 });
 
-module.exports = mongoose.model('Schedule', ScheduleSchema);
+const Schedule = mongoose.model('Schedule', scheduleSchema);
+
+module.exports = Schedule;
