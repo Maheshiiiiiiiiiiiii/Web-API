@@ -1,15 +1,13 @@
 # Web-API
-# Train Management System
+# Train Tracking API - Scheduling Feature
 
 ## Overview
 
-This project manages train schedules, engine changes, and client information for a train system.
+The `feature/scheduling` branch introduces functionality for managing train schedules. This feature allows for the addition, updating, and retrieval of train schedules, including handling daily, weekday, weekend, and special schedules.
 
 ## Features
 
-- **Create and Manage Clients**: Add new clients and manage their details.
-- **Update Client Information**: Modify existing client records.
-- **Retrieve Client Data**: Access information about specific clients.
-- **Delete Clients**: Remove client records from the system.
-- **Integrate with Authentication**: Ensure client data is managed in conjunction with authentication and authorization features.
-
+- **Add Train Schedules**: Create new schedules for trains, including start and end times, frequency, and route details.
+- **Update Train Schedules**: Modify existing schedules as needed.
+- **Retrieve Train Schedules**: Fetch schedules based on train ID, date, and other criteria.
+- **Handle Special Schedules**: Manage schedules for holidays, special events, and other non-standard timings.
