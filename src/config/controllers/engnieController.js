@@ -1,37 +1,66 @@
+const Engine = require('../models/Engine');
 const Train = require('../models/Train');
 
-exports.handleEngineChange = async (train_id, newEngine) => {
-  if (!newEngine) {
-    throw new Error('New engine must be provided');
+const getEngines = async (req, res) => {
+  try {
+    const engines = await Engine.find();
+    res.status(200).json(engines);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching engines', error });
   }
+};
+
+const getEngineById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const engine = await Engine.findById(id);
+    if (!engine) {
+      return res.status(404).json({ message: 'Engine not found' });
+    }
+    res.status(200).json(engine);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching engine', error });
+  }
+};
+
+const addEngine = async (req, res) => {
+  const { engine_id } = req.body;
 
   try {
-    const train = await Train.findById(train_id);
-    if (!train) {
-      throw new Error('Train not found');
+    const existingEngine = await Engine.findOne({ engine_id });
+    if (existingEngine) {
+      return res.status(400).json({ message: 'Engine ID already exists' });
     }
 
-    // Handle engine ID update
-    if (train.current_engine && train.engine_history.includes(train.current_engine)) {
-      train.engine_history.push(train.current_engine);
-    }
-
-    train.current_engine = newEngine;
-
-    // Check for dual engine situation
-    if (train.engine_history.length === 2) {
-      // Logic to switch off one IoT device (placeholder logic)
-      if (train.iotDevices && train.iotDevices.length > 1) {
-        train.iotDevices[1].status = 'off';  // Example: turn off the second IoT device
-        // Save IoT device status changes if applicable
-        // await train.saveIoTDevices(); // Uncomment if you have a save method for IoT devices
-      }
-    }
-
-    await train.save();
-    console.log(`Engine changed successfully for train ${train_id}`);
+    const newEngine = new Engine({ engine_id });
+    await newEngine.save();
+    res.status(201).json({ message: 'Engine added successfully', engine: newEngine });
   } catch (error) {
-    console.error(`Failed to change engine for train ${train_id}:`, error);
-    throw error;
+    res.status(500).json({ message: 'Error adding engine', error });
   }
+};
+
+const updateEngineStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const engine = await Engine.findById(id);
+    if (!engine) {
+      return res.status(404).json({ message: 'Engine not found' });
+    }
+
+    engine.status = status;
+    await engine.save();
+    res.status(200).json({ message: 'Engine status updated successfully', engine });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating engine status', error });
+  }
+};
+
+module.exports = {
+  getEngines,
+  getEngineById,
+  addEngine,
+  updateEngineStatus,
 };

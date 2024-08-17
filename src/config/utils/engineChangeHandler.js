@@ -17,21 +17,33 @@ const handleEngineChange = async (train_id, newEngine) => {
       throw new Error('Train not found');
     }
 
-    // If train has two engines, turn off one IoT device
-    if (train.current_engine && train.current_engine !== newEngine) {
-      // Logic to switch off one IoT device (to be implemented based on actual IoT setup)
-      console.log(`Switching off IoT device for engine ${train.current_engine}`);
+    const newEngine = await Engine.findById(newEngineId);
+    if (!newEngine) {
+      throw new Error('New engine not found');
     }
 
-    // Update train's engine information
-    train.engine_history.push(train.current_engine);
-    train.current_engine = newEngine;
+    // If train has a current engine and it's different from the new engine, update IoT status
+    if (train.primary_engine && !train.primary_engine.equals(newEngine._id)) {
+      const currentEngine = await Engine.findById(train.primary_engine);
+      if (currentEngine) {
+        currentEngine.status = 'inactive';
+        await currentEngine.save();
+        console.log(`IoT device for engine ${currentEngine.engine_id} switched off`);
+      }
+    }
+
+    newEngine.status = 'active';
+    newEngine.train = train._id;
+    await newEngine.save();
+
+    train.engine_history.push(train.primary_engine);
+    train.primary_engine = newEngine._id;
     await train.save();
 
     console.log(`Engine changed successfully for train ${train_id}`);
   } catch (error) {
-    console.error(`Failed to change engine for train ${train_id}: ${error.message}`);
-    throw error;  // Rethrow the error after logging it
+    console.error(`Failed to change engine for train ${train_id}:`, error);
+    throw error;
   }
 };
 

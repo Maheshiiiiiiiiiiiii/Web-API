@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
-const TrainSchema = new mongoose.Schema({
-  train_id: { type: String, required: true, unique: true },
-  current_engine: { type: String, required: true },
-  engine_history: [{ type: String }],
+const trainSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  primary_engine: { type: mongoose.Schema.Types.ObjectId, ref: 'Engine' },
+  secondary_engine: { type: mongoose.Schema.Types.ObjectId, ref: 'Engine' },
+  engine_history: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Engine' }],
+  schedule: { type: mongoose.Schema.Types.ObjectId, ref: 'Schedule' },
 });
 
-module.exports = mongoose.model('Train', TrainSchema);
+const Train = mongoose.model('Train', trainSchema);
+
+module.exports = Train;
