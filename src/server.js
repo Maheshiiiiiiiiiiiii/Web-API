@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const trainRoutes = require('./routes/trainRoutes');
+const trainRoutes = require('./config/routes/trainRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Updated the port to 3000

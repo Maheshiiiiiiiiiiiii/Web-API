@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const trainController = require('../controllers/trainController');
-const protect = require('../middleware/authMiddleware');
+const protect = require('../middleware/auth');
 
 router.post('/:id/gps', protect, trainController.receiveGPSData);
 router.get('/', protect, trainController.fetchTrainData);
