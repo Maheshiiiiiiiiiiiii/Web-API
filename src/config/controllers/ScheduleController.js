@@ -5,34 +5,7 @@ const handleEngineChange = require('../utils/engineChangeHandler');
 const networkRetryHandler = require('../utils/networkRetryHandler');
 const { v4: uuidv4 } = require('uuid');
 
-// Add Schedule
-exports.addSchedule = async (req, res) => {
-  const { train_id, date, day, frequency, special } = req.body;
 
-  try {
-    // Find the train
-    const train = await Train.findById(train_id);
-    if (!train) {
-      return res.status(404).json({ error: 'Train not found' });
-    }
-
-    // Create a new schedule
-    const schedule = new Schedule({
-      schedule_id: uuidv4(),
-      train_id,
-      date,
-      day,
-      frequency, // daily, weekdays, weekends
-      special,   // special train information
-    });
-
-    // Save the schedule
-    await schedule.save();
-    res.status(201).json(schedule);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to add schedule' });
-  }
-};
 
 // Update Schedule
 exports.updateSchedule = async (req, res) => {
@@ -58,18 +31,11 @@ exports.updateSchedule = async (req, res) => {
   }
 };
 
-// Fetch All Schedules
-exports.fetchAllSchedules = async (req, res) => {
-  try {
-    const schedules = await Schedule.find();
-    res.status(200).json(schedules);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch schedules' });
-  }
-};
+
+
 
 // Fetch Specific Schedule
-exports.fetchSpecificSchedule = async (req, res) => {
+exports.fetchSchedules = async (req, res) => {
   const { id } = req.params;
   try {
     const schedule = await Schedule.findById(id);
@@ -83,6 +49,9 @@ exports.fetchSpecificSchedule = async (req, res) => {
 };
 
 // Manage Engine ID and IoT Device
+
+
+/*
 exports.manageEngineAndIoT = async (req, res) => {
   const { train_id, newEngine } = req.body;
 
@@ -114,3 +83,33 @@ exports.manageEngineAndIoT = async (req, res) => {
     res.status(500).json({ error: 'Failed to manage engine and IoT device' });
   }
 };
+
+// Add Schedule
+exports.addSchedule = async (req, res) => {
+  const { train_id, date, day, frequency, special } = req.body;
+
+  try {
+    // Find the train
+    const train = await Train.findById(train_id);
+    if (!train) {
+      return res.status(404).json({ error: 'Train not found' });
+    }
+
+    // Create a new schedule
+    const schedule = new Schedule({
+      schedule_id: uuidv4(),
+      train_id,
+      date,
+      day,
+      frequency, // daily, weekdays, weekends
+      special,   // special train information
+    });
+
+    // Save the schedule
+    await schedule.save();
+    res.status(201).json(schedule);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add schedule' });
+  }
+};
+*/

@@ -29,7 +29,7 @@ exports.receiveGPSData = async (req, res) => {
   }
 };
 
-// Fetch All Train Data
+// Fetch All Train Data think about it . how to apply on frontend
 exports.fetchTrainData = async (req, res) => {
   try {
     const trains = await Train.find();

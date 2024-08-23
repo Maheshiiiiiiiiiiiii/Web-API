@@ -9,10 +9,12 @@ const {
 
 const router = express.Router();
 
-router.post('/:id/location', receiveGPSData);
+router.post('/:id/location', receiveGPSData);//post resived data to my backend db
+
+//API train details 
 router.get('/data', fetchTrainData);
 router.get('/data/:id', fetchSpecificTrainData);
 router.get('/location-history/:id', fetchTrainLocationHistory);
-router.post('/change-engine/:id', changeEngine);
+router.post('/change-engine/:id', changeEngine);//remove
 
 module.exports = router;
