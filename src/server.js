@@ -1,11 +1,12 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-const authRoutes = require('./routes/authRoutes');
-const clientRoutes = require('./routes/clientRoutes');
-const engineRoutes = require('./routes/engineRoutes');
-const scheduleRoutes = require('./routes/scheduleRoutes');
-const trainRoutes = require('./routes/trainRoutes');
+const authRoutes = require('./config/routes/authRoutes');
+const clientRoutes = require('./config/routes/clientRoutes');
+const engineRoutes = require('./config/routes/engineRoutes');
+const scheduleRoutes = require('./config/routes/scheduleRoutes');
+const trainRoutes = require('./config/routes/trainRoutes');
+const mongoose = require("mongoose");
 
 dotenv.config();
 connectDB();
@@ -25,11 +26,9 @@ app.listen(PORT, () => {
 });
 require('dotenv').config();
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    console.log ('mongodb is connect:')
   })
   .catch(err => {
     console.error('Database connection error:', err);
