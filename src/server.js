@@ -1,5 +1,6 @@
 const express = require('express');
 const connectDB = require('./config/db');
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -22,12 +23,16 @@ app.use('/api/engines', engineRoutes);
 app.use('/api/routes', routeRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/trains', trainRoutes);
-app.use('/api/locations', locationRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-connectDB().then(() => {
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
+}).catch((error) => {
+    console.error('Database connection error:', error);
 });

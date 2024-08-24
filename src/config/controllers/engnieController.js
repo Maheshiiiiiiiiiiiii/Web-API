@@ -31,9 +31,9 @@ exports.removeEngine = async (req, res) => {
             return res.status(404).json({ message: 'Engine not found' });
         }
 
-        const train = await Train.findById(engine.train);
-        train.engines.pull(engine_id);
-        await train.save();
+        // Remove engine from train
+        const trainUrl = `http://your-train-service-url/trains/${engine.train_id}/engines/${engine_id}`;
+        await networkRetryHandler(trainUrl, { method: 'DELETE' });
 
         res.status(200).json({ message: 'Engine removed successfully' });
     } catch (error) {
@@ -43,7 +43,7 @@ exports.removeEngine = async (req, res) => {
 
 exports.getEngines = async (req, res) => {
     try {
-        const engines = await Engine.find().populate('train');
+        const engines = await Engine.find();
         res.status(200).json(engines);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching engines', error });

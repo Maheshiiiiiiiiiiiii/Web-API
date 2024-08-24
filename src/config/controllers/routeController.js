@@ -29,24 +29,22 @@ exports.getAllRoutes = async (req, res) => {
     }
 };
 
-exports.getRouteById = async (req, res) => {
-    const { id } = req.params;
-
+exports.createRoute = async (req, res) => {
+    const { name, startLocation, endLocation } = req.body;
+    
     try {
-        const route = await Route.findById(id);
-        if (!route) {
-            return res.status(404).json({ message: 'Route not found' });
-        }
-        res.status(200).json(route);
+        const route = new Route({ name, startLocation, endLocation });
+        await route.save();
+        res.status(201).json({ message: 'Route created successfully', route });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching route', error });
+        res.status(500).json({ message: 'Error creating route', error });
     }
 };
 
 exports.updateRoute = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
-
+    
     try {
         const route = await Route.findByIdAndUpdate(id, updates, { new: true });
         if (!route) {
@@ -60,7 +58,7 @@ exports.updateRoute = async (req, res) => {
 
 exports.deleteRoute = async (req, res) => {
     const { id } = req.params;
-
+    
     try {
         const route = await Route.findByIdAndDelete(id);
         if (!route) {

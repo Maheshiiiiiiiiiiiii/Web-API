@@ -1,36 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { verifyToken } = require('../utils/verifyToken');
-const { createSchedule, getSchedules, getScheduleById, updateSchedule, deleteSchedule } = require('../controllers/ScheduleController');
-
-router.post('/', verifyToken, createSchedule);
-router.get('/', verifyToken, getSchedules);
-router.get('/:id', verifyToken, getScheduleById);
-router.put('/:id', verifyToken, updateSchedule);
-router.delete('/:id', verifyToken, deleteSchedule);
-
-module.exports = router;
 const Schedule = require('../models/Schedule');
 
-exports.createSchedule = async (req, res) => {
-    const { trainId, departureTime, arrivalTime, days, date } = req.body;
-
-    try {
-        const schedule = new Schedule({
-            trainId,
-            departureTime,
-            arrivalTime,
-            days,
-            date,
-        });
-        await schedule.save();
-        res.status(201).json(schedule);
-    } catch (error) {
-        res.status(500).json({ message: 'Error creating schedule', error });
-    }
-};
-
-exports.getAllSchedules = async (req, res) => {
+exports.getSchedules = async (req, res) => {
     try {
         const schedules = await Schedule.find();
         res.status(200).json(schedules);
@@ -39,16 +9,43 @@ exports.getAllSchedules = async (req, res) => {
     }
 };
 
-exports.getScheduleById = async (req, res) => {
-    const { id } = req.params;
-
+exports.createSchedule = async (req, res) => {
+    const { trainId, routeId, departureTime, arrivalTime, date, dayType } = req.body;
+    
     try {
-        const schedule = await Schedule.findById(id);
+        const schedule = new Schedule({ trainId, routeId, departureTime, arrivalTime, date, dayType });
+        await schedule.save();
+        res.status(201).json({ message: 'Schedule created successfully', schedule });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating schedule', error });
+    }
+};
+
+exports.updateSchedule = async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+    
+    try {
+        const schedule = await Schedule.findByIdAndUpdate(id, updates, { new: true });
         if (!schedule) {
             return res.status(404).json({ message: 'Schedule not found' });
         }
-        res.status(200).json(schedule);
+        res.status(200).json({ message: 'Schedule updated successfully', schedule });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching schedule', error });
+        res.status500.json({ message: 'Error updating schedule', error });
+    }
+};
+
+exports.deleteSchedule = async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const schedule = await Schedule.findByIdAndDelete(id);
+        if (!schedule) {
+            return res.status(404).json({ message: 'Schedule not found' });
+        }
+        res.status(200).json({ message: 'Schedule deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting schedule', error });
     }
 };

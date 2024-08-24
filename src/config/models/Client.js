@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const clientSchema = new Schema({
-    clientId: {
-        type: String,
-        required: true,
-        unique: true
-    },
+const clientSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -15,14 +9,6 @@ const clientSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    created_at: {
-        type: Date,
-        default: Date.now
     }
 });
 

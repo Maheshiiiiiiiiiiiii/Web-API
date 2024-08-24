@@ -4,6 +4,7 @@ const { verifyToken } = require('../utils/verifyToken');
 const { register, login } = require('../controllers/authController');
 
 const authController = require('../controllers/authController');
+
 router.post('/register', register);
 router.post('/login', login);
 
