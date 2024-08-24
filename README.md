@@ -325,3 +325,20 @@ This project is a Train Tracking API system for managing and tracking trains' sc
 - **Monitoring:** Log and monitor API performance and usage.
 - **Security:** API key and OAuth integration for enhanced security.
 - **Health Check:** Endpoints to monitor API server status.
+This project is a RESTful API for tracking trains, including their schedules, routes, engines, and more. The API also includes client management and authentication features.
+
+## Features
+
+- Authentication and Authorization
+- Train, Route, Schedule, Engine management
+- Health Check Endpoint
+- JWT-based token authentication
+
+## Technologies
+
+- Node.js
+- Express.js
+- MongoDB
+- JWT
+
+#
