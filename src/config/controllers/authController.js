@@ -1,25 +1,14 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const Client = require('../models/Client');
 
 exports.register = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const existingClient = await Client.findOne({ email });
-        if (existingClient) {
-            return res.status(400).json({ message: 'Client already exists' });
-        }
-
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const client = new Client({
-            name,
-            email,
-            password: hashedPassword,
-        });
-
-        await client.save();
+        const newClient = new Client({ email, password: hashedPassword });
+        await newClient.save();
 
         res.status(201).json({ message: 'Client registered successfully' });
     } catch (error) {

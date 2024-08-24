@@ -1,6 +1,18 @@
 const Schedule = require('../models/Schedule');
 
-exports.getSchedules = async (req, res) => {
+exports.createSchedule = async (req, res) => {
+    const { trainId, departureTime, arrivalTime } = req.body;
+
+    try {
+        const newSchedule = new Schedule({ trainId, departureTime, arrivalTime });
+        await newSchedule.save();
+        res.status(201).json(newSchedule);
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating schedule', error });
+    }
+};
+
+exports.getAllSchedules = async (req, res) => {
     try {
         const schedules = await Schedule.find();
         res.status(200).json(schedules);

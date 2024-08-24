@@ -1,20 +1,12 @@
 const Route = require('../models/Route');
-const Train = require('../models/Train');
 
 exports.createRoute = async (req, res) => {
-    const { route_id, start_location, end_location, stops, trains } = req.body;
-    
-    try {
-        const newRoute = new Route({
-            route_id,
-            start_location,
-            end_location,
-            stops,
-            trains
-        });
+    const { name, stops } = req.body;
 
+    try {
+        const newRoute = new Route({ name, stops });
         await newRoute.save();
-        res.status(201).json({ message: 'Route created successfully', route: newRoute });
+        res.status(201).json(newRoute);
     } catch (error) {
         res.status(500).json({ message: 'Error creating route', error });
     }
