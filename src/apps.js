@@ -6,12 +6,12 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const authRoutes = require('./routes/authRoutes');
-const clientRoutes = require('./routes/clientRoutes');
-const engineRoutes = require('./routes/engineRoutes');
-const routeRoutes = require('./routes/routeRoutes');
-const scheduleRoutes = require('./routes/scheduleRoutes');
-const trainRoutes = require('./routes/trainRoutes');
+const authRoutes = require('./config/routes/authRoutes');
+const clientRoutes = require('./config/routes/clientRoutes');
+const engineRoutes = require('./config/routes/engineRoutes');
+const routeRoutes = require('./config/routes/routeRoutes');
+const scheduleRoutes = require('./config/routes/scheduleRoutes');
+const trainRoutes = require('./config/routes/trainRoutes');
 
 const app = express();
 
