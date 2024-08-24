@@ -1,51 +1,66 @@
-const Train = require('../models/Train');
 const Engine = require('../models/Engine');
+const Train = require('../models/Train');
 
-exports.addEngine = async (req, res) => {
-    const { train_id, engine_id } = req.body;
-    
-    try {
-        const train = await Train.findById(train_id);
-        if (!train) {
-            return res.status(404).json({ message: 'Train not found' });
-        }
-
-        const engine = new Engine({ engine_id, train: train_id });
-        train.engines.push(engine);
-
-        await engine.save();
-        await train.save();
-
-        res.status(201).json({ message: 'Engine added successfully', engine });
-    } catch (error) {
-        res.status(500).json({ message: 'Error adding engine', error });
-    }
+const getEngines = async (req, res) => {
+  try {
+    const engines = await Engine.find();
+    res.status(200).json(engines);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching engines', error });
+  }
 };
 
-exports.removeEngine = async (req, res) => {
-    const { engine_id } = req.params;
-
-    try {
-        const engine = await Engine.findByIdAndDelete(engine_id);
-        if (!engine) {
-            return res.status(404).json({ message: 'Engine not found' });
-        }
-
-        // Remove engine from train
-        const trainUrl = `http://your-train-service-url/trains/${engine.train_id}/engines/${engine_id}`;
-        await networkRetryHandler(trainUrl, { method: 'DELETE' });
-
-        res.status(200).json({ message: 'Engine removed successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error removing engine', error });
+const getEngineById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const engine = await Engine.findById(id);
+    if (!engine) {
+      return res.status(404).json({ message: 'Engine not found' });
     }
+    res.status(200).json(engine);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching engine', error });
+  }
 };
 
-exports.getEngines = async (req, res) => {
-    try {
-        const engines = await Engine.find();
-        res.status(200).json(engines);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching engines', error });
+const addEngine = async (req, res) => {
+  const { engine_id } = req.body;
+
+  try {
+    const existingEngine = await Engine.findOne({ engine_id });
+    if (existingEngine) {
+      return res.status(400).json({ message: 'Engine ID already exists' });
     }
+
+    const newEngine = new Engine({ engine_id });
+    await newEngine.save();
+    res.status(201).json({ message: 'Engine added successfully', engine: newEngine });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding engine', error });
+  }
+};
+
+const updateEngineStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const engine = await Engine.findById(id);
+    if (!engine) {
+      return res.status(404).json({ message: 'Engine not found' });
+    }
+
+    engine.status = status;
+    await engine.save();
+    res.status(200).json({ message: 'Engine status updated successfully', engine });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating engine status', error });
+  }
+};
+
+module.exports = {
+  getEngines,
+  getEngineById,
+  addEngine,
+  updateEngineStatus,
 };
