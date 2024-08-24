@@ -6,6 +6,8 @@ const { addEngine, removeEngine, getEngines } = require('../controllers/engineCo
 const engineController = require('../controllers/engineController');
 const verifyToken = require('../utils/verifyToken');
 
+const { getEngines, changeEngine } = require('../controllers/engineController');
+
 router.post('/', engineController.addEngine);
 router.get('/', engineController.getEngines);
 router.put('/:id', engineController.updateEngine);
@@ -19,5 +21,8 @@ router.get('/', verifyToken, engineController.getAllEngines);
 router.get('/:id', verifyToken, engineController.getEngineById);
 router.put('/:id', verifyToken, engineController.updateEngine);
 router.delete('/:id', verifyToken, engineController.deleteEngine);
+
+router.get('/', getEngines);
+router.post('/change', changeEngine);
 
 module.exports = router;
