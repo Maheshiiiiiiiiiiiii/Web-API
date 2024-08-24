@@ -1,3 +1,3 @@
-exports.checkHealth = (req, res) => {
-    res.json({ status: 'API is healthy' });
+exports.healthCheck = (req, res) => {
+    res.status(200).json({ status: 'OK', message: 'API is running smoothly' });
 };
