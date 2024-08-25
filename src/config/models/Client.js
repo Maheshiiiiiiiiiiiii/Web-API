@@ -24,3 +24,17 @@ clientSchema.methods.matchPassword = async function(password) {
 const Client = mongoose.model('Client', clientSchema);
 
 module.exports = Client;
+
+const clientSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    }
+});
+
+module.exports = mongoose.model('Client', clientSchema);

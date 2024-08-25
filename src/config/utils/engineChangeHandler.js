@@ -1,4 +1,5 @@
 const Train = require('../models/Train');
+const Engine = require('../models/Engine');
 
 /**
  * Handles the process of changing the engine for a specific train.
@@ -9,6 +10,9 @@ const Train = require('../models/Train');
 const handleEngineChange = async (train_id, newEngine) => {
   if (!newEngine) {
     throw new Error('New engine must be provided');
+const handleEngineChange = async (train_id, newEngineId) => {
+  if (!newEngineId) {
+    throw new Error('New engine ID must be provided');
   }
 
   try {
