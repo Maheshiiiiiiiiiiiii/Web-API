@@ -19,6 +19,9 @@ app.use('/api/clients', clientRoutes);
 app.use('/api/engines', engineRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/trains', trainRoutes);
+app.get('/api', (req, res) => {
+  res.send('Hello World!')
+})
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

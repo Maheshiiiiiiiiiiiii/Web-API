@@ -6,6 +6,7 @@ const generateToken = (id) => {
 };
 
 exports.registerClient = async (req, res) => {
+  console.log("register client", req.data)
   const { name, email, password } = req.body;
 
   try {
