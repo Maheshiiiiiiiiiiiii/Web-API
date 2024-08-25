@@ -42,4 +42,4 @@ router.get('/', verifyToken, trainController.getAllTrains);
 router.get('/:id', verifyToken, trainController.getTrainById);
 router.get('/location/:trainId', verifyToken, trainController.getTrainLocation);
 
-module.exports = router;
+module.exports = router

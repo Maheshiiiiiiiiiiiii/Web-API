@@ -51,6 +51,6 @@ const networkRetryHandler = async (url, options, retries = 3) => {
             }
         }
     }
-};
+}};
 
-module.exports = networkRetryHandler;
+module.exports = networkRetryHandler

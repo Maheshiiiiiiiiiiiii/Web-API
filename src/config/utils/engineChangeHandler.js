@@ -50,5 +50,5 @@ const handleEngineChange = async (train_id, newEngineId) => {
     throw error;
   }
 };
-
-module.exports = handleEngineChange;
+  }};
+module.exports = handleEngineChange
