@@ -13,19 +13,19 @@ exports.registerClient = async (req, res) => {
     const clientExists = await Client.findOne({ email });
 
     if (clientExists) {
-      return res.status(400).json({ message: 'Client already exists' });
+      return res.send(400).json({ message: 'Client already exists' });
     }
 
     const client = await Client.create({ name, email, password });
 
-    res.status(201).json({
+    res.send(201).json({
       _id: client._id,
       name: client.name,
       email: client.email,
       token: generateToken(client._id)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating client', error });
+    res.send(500).json({ message: 'Error creating client', error });
   }
 };
 
@@ -50,14 +50,6 @@ exports.loginClient = async (req, res) => {
   }
 };
 
-exports.getClients = async (req, res) => {
-  try {
-    const clients = await Client.find();
-    res.status(200).json(clients);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching clients', error });
-  }
-};
 
 exports.getAllClients = async (req, res) => {
     try {
