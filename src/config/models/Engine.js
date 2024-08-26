@@ -6,9 +6,6 @@ const engineSchema = new mongoose.Schema({
   train: { type: mongoose.Schema.Types.ObjectId, ref: 'Train' },
 });
 
-const Engine = mongoose.model('Engine', engineSchema);
-
-module.exports = Engine;
 const EngineSchema = new mongoose.Schema({
     engineId: {
         type: String,

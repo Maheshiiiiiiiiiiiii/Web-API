@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const engineController = require('../controllers/engineController');
+const engineController = require('../controllers/engnieController');
 //const { verifyToken } = require('../utils/verifyToken');
-const { addEngine, removeEngine, getEngines,changeEngine} = require('../controllers/engineController');
-
 
 router.post('/change', async (req, res) => {
   const { train_id, newEngine } = req.body;
@@ -17,14 +15,8 @@ router.post('/change', async (req, res) => {
 
 router.post('/', engineController.addEngine);
 router.get('/', engineController.getEngines);
-router.put('/:id', engineController.updateEngine);
-router.delete('/:id', engineController.deleteEngine);
-router.post('/', addEngine);
-router.delete('/:engine_id', removeEngine);
-router.get('/', getEngines);
+router.get('/:engine_id', engineController.getEngineById);
+router.get('/', engineController.getEngines);
 
-router.post('/', engineController.createEngine);
-router.get('/:id', engineController.getEngineById);
-router.post('/change', changeEngine);
 
 module.exports = router;
