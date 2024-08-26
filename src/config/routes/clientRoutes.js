@@ -1,12 +1,14 @@
 const express = require('express');
-const { registerClient, loginClient,getAllClients,getClientById } = require('../controllers/clientController');
+const { registerClient, loginClient, getAllClients, getClientById } = require('../controllers/clientController');
 const router = express.Router();
-const verifyToken = require('../utils/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 
-//router.post('/register', registerClient);
+// Public routes
+router.post('/register', registerClient);
 router.post('/login', loginClient);
-router.post('/register',registerClient);
-router.get('/',getAllClients);
-router.get('/:id',getClientById);
+
+// Protected routes
+router.get('/', verifyToken, getAllClients);
+router.get('/:id', verifyToken, getClientById);
 
 module.exports = router;

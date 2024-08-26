@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { registerClient, loginClient, register} = require('../controllers/authController');
-const { verifyToken } = require('../utils/verifyToken');
+const authController = require('../controllers/authController'); // Ensure this path is correct
+const verifyToken = require('../middleware/verifyToken'); // Import the verifyToken middleware
 
-router.post('/register', registerClient);
-router.post('/login', loginClient);
+// Public routes
+router.post('/login', authController.login);
+router.post('/register', authController.register);
 
-
-//router.post('/register', register);
-//router.post('/login', login);
-
-
+// Protected routes
+router.get('/profile', verifyToken, authController.getProfile);
+router.post('/update', verifyToken, authController.updateProfile);
 
 module.exports = router;

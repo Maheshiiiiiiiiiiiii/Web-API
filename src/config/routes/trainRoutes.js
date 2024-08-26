@@ -1,18 +1,18 @@
 const express = require('express');
 const {
+  getTrainById,
+  updateTrain,
+  deleteTrain,
+  createTrain,
+  getTrains,
   receiveGPSData,
   fetchTrainData,
   fetchSpecificTrainData,
   fetchTrainLocationHistory,
-  changeEngine,
-  createTrain,
-  getTrains,
-  getTrainById,
-  updateTrain,
-  deleteTrain
+  changeEngine
 } = require('../controllers/trainController'); // Ensure all functions are imported correctly
-const protect = require('../middleware/auth');
-const { verifyToken } = require('../utils/verifyToken');
+//const protect = require('../middleware/auth');
+const verifyToken = require('../middleware/verifyToken');
 
 const router = express.Router();
 
@@ -24,13 +24,13 @@ router.get('/data/:id', fetchSpecificTrainData);
 router.get('/location-history/:id', fetchTrainLocationHistory);
 router.post('/change-engine/:id', changeEngine); // remove
 
-router.post('/:id/gps', protect, receiveGPSData);
+/*router.post('/:id/gps', protect, receiveGPSData);
 router.get('/', protect, fetchTrainData);
 router.get('/:id', protect, fetchSpecificTrainData);
 router.get('/:id/history', protect, fetchTrainLocationHistory);
-router.post('/:id/change-engine', protect, changeEngine);
+router.post('/:id/change-engine', protect, changeEngine);*/
 
-/*router.post('/', verifyToken,()=>{}, createTrain);
+/*router.post('/', verifyToken, createTrain);
 router.get('/', verifyToken, getTrains);
 router.get('/:id', verifyToken, getTrainById);
 router.put('/:id', verifyToken, updateTrain);

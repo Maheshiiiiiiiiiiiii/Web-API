@@ -1,6 +1,6 @@
 const express = require('express');
 const { addCrowdingInfo, getCrowdingInfo } = require('../controllers/crowdingController');
-const verifyToken = require('../utils/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 
 const router = express.Router();
 
