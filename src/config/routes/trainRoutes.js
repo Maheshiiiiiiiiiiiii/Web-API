@@ -16,24 +16,19 @@ const verifyToken = require('../middleware/verifyToken');
 
 const router = express.Router();
 
-router.post('/:id/location', receiveGPSData); // post received data to my backend db
+router.post('/:id/location', verifyToken, receiveGPSData); // post received data to my backend db
 
 // API train details 
-router.get('/data', fetchTrainData);
-router.get('/data/:id', fetchSpecificTrainData);
-router.get('/location-history/:id', fetchTrainLocationHistory);
-router.post('/change-engine/:id', changeEngine); // remove
+router.get('/data', verifyToken, fetchTrainData);
+router.get('/data/:id', verifyToken, fetchSpecificTrainData);
+router.get('/location-history/:id', verifyToken, fetchTrainLocationHistory);
+router.post('/change-engine/:id', verifyToken, changeEngine); // remove
 
-/*router.post('/:id/gps', protect, receiveGPSData);
-router.get('/', protect, fetchTrainData);
-router.get('/:id', protect, fetchSpecificTrainData);
-router.get('/:id/history', protect, fetchTrainLocationHistory);
-router.post('/:id/change-engine', protect, changeEngine);*/
-
-/*router.post('/', verifyToken, createTrain);
+// Uncommented routes with verifyToken middleware
+router.post('/', verifyToken, createTrain);
 router.get('/', verifyToken, getTrains);
 router.get('/:id', verifyToken, getTrainById);
 router.put('/:id', verifyToken, updateTrain);
-router.delete('/:id', verifyToken, deleteTrain);*/
+router.delete('/:id', verifyToken, deleteTrain);
 
 module.exports = router;
