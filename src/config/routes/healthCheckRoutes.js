@@ -4,7 +4,7 @@ const router = express.Router();
 
 const { healthCheck } = require('../controllers/healthCheckController');
 
-router.get('/', checkHealth);
+router.get('/', verifyToken, checkHealth);
 
 router.get('/', healthCheck);
 
