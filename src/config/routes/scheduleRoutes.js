@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const scheduleController = require('../controllers/ScheduleController');
-const { verifyToken } = require('../middleware/verifyToken'); // Ensure this path is correct
+const scheduleController = require('../controllers/scheduleController');
+const verifyToken = require('../middleware/verifyToken');
 
-router.post('/', verifyToken, scheduleController.createSchedule);
-router.put('/:id', verifyToken, scheduleController.updateSchedule);
-router.delete('/:id', verifyToken, scheduleController.deleteSchedule);
-router.get('/', verifyToken, scheduleController.getAllSchedules);
-router.get('/schedule/:train_id', verifyToken, scheduleController.fetchSchedules);
+router.get('/schedules', verifyToken, scheduleController.getSchedules);
+router.get('/schedules/:id', verifyToken, scheduleController.getScheduleById);
+router.post('/schedules', verifyToken, scheduleController.addSchedule);
+router.put('/schedules/:id', verifyToken, scheduleController.updateSchedule);
+router.delete('/schedules/:id', verifyToken, scheduleController.deleteSchedule);
 
 module.exports = router;

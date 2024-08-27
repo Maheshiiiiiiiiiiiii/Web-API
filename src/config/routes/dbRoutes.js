@@ -5,7 +5,7 @@ const {
   fetchSpecificTrainData,
   fetchTrainLocationHistory,
   changeEngine,
-} = require('../controllers/dbController');
+} = require('../controllers/trainController');
 
 const router = express.Router();
 

@@ -1,16 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const engineController = require('../controllers/engineController'); // Corrected typo
-const { verifyToken } = require('../middleware/verifyToken'); 
+const engineController = require('../controllers/engnieController');
+const verifyToken = require('../middleware/verifyToken');
 
-// Log the imported controller to verify it contains all methods
-console.log(engineController);
-
-// Define routes with appropriate middleware and controller methods
-router.post('/', engineController.addEngine); 
-router.get('/', verifyToken, engineController.getEngines);
-router.put('/:id', verifyToken, engineController.updateEngineStatus);
-router.delete('/:id', verifyToken, engineController.deleteEngine);
-router.get('/:id', verifyToken, engineController.getEngineById);
+router.get('/engines', verifyToken, engineController.getEngines);
+router.get('/engines/:id', verifyToken, engineController.getEngineById);
+router.post('/engines', verifyToken, engineController.addEngine);
+router.put('/engines/:id', verifyToken, engineController.updateEngineStatus);
+router.delete('/engines/:id', verifyToken, engineController.deleteEngine);
+router.put('/trains/:train_id/engine', verifyToken, engineController.changeEngine);
 
 module.exports = router;
