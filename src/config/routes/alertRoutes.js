@@ -1,6 +1,6 @@
 const express = require('express');
 const { createAlert, getAllAlerts, getAlertById, updateAlert, deleteAlert } = require('../controllers/alertController');
-const verifyToken = require('../utils/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 
 const router = express.Router();
 

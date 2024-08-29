@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const lostFoundController = require('../controllers/lostFoundController');
-const verifyToken = require('../middlewares/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 
 router.post('/', verifyToken, lostFoundController.createLostFound);
 router.get('/', lostFoundController.getLostFoundItems);

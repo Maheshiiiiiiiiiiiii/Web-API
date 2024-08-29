@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const newsController = require('../controllers/newsController');
-const verifyToken = require('../middlewares/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 
 // Routes for news management
 router.post('/news', verifyToken, newsController.createNews);

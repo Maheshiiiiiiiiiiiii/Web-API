@@ -1,6 +1,6 @@
 const express = require('express');
 const { getLogs, logMessage } = require('../controllers/monitoringController');
-const verifyToken = require('../utils/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 const router = express.Router();
 
 // Apply verifyToken middleware to routes that require authentication

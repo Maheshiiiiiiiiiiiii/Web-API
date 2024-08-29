@@ -1,12 +1,12 @@
 const Log = require('../models/log.js');
+const { createLogger, format, transports } = require('winston');
 
 function logger(level, message, meta = {}) {
     const log = new Log({ level, message, meta });
     log.save().catch(err => console.error('Failed to log message', err.message));
 }
-const { createLogger, format, transports } = require('winston');
 
-const logger = createLogger({
+const loggerInstance = createLogger({
     level: 'info',
     format: format.combine(
         format.timestamp(),
@@ -18,4 +18,4 @@ const logger = createLogger({
     ],
 });
 
-module.exports = logger;
+module.exports = loggerInstance;

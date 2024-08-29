@@ -1,15 +1,10 @@
 const mongoose = require('mongoose');
 
-const healthCheck = async (req, res) => {
-    const dbState = mongoose.connection.readyState;
-    const dbStatus = dbState === 1 ? 'connected' : 'disconnected';
+exports.checkHealth = (req, res) => {
+    res.status(200).json({ status: 'Healthy' });
 
     res.status(200).json({
         status: 'API is running',
         database: dbStatus
     });
-};
-
-module.exports = {
-    healthCheck
 };
