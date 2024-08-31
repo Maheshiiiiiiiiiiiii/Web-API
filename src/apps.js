@@ -9,18 +9,31 @@ dotenv.config();
 const authRoutes = require('./config/routes/authRoutes');
 const clientRoutes = require('./config/routes/clientRoutes');
 const engineRoutes = require('./config/routes/engineRoutes');
-const routeRoutes = require('./config/routes/routeRoutes');
 const scheduleRoutes = require('./config/routes/scheduleRoutes');
 const trainRoutes = require('./config/routes/trainRoutes');
-const bestClicksRoutes = require('./routes/bestClicksRoutes');
+const routeRoutes = require('./config/routes/routeRoutes');
+const maintenanceAlertRoutes = require('./config/routes/maintenanceAlertRoutes');
+const crowdingInfoRoutes = require('./config/routes/crowdingRoutes');
+const bestClicksRoutes = require('./config/routes/bestClicksRoutes');
+const lostFoundRoutes = require('./config/routes/lostFoundRoutes');
+const newsRoutes = require('./config/routes/newsRoutes');
+const locationRoutes = require('./config/routes/locationRoute');
+const retryRoutes = require('./config/routes/retryRoutes');
+const networkReliabilityRoutes = require('./config/routes/networkReliabilityRoutes');
+const userRoutes = require('./config/routes/userRoutes');
+const apiKeyRoutes = require('./config/routes/apiKeyRoutes');
+const logRoutes = require('./config/routes/logRoutes');
+const alertRoutes = require('./config/routes/alertRoutes');
+const healthCheckRoutes = require('./config/routes/healthCheckRoutes');
+const locationCacheRoutes = require('./config/routes/locationCacheRoutes');
+const monitoringRoutes = require('./config/routes/monitoringRoutes');
+const optimizationRoutes = require('./config/routes/optimizationRoutes');
+const securityRoutes = require('./config/routes/securityRoutes');
 
+const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-
-const app = express();
-app.use(cors());
-app.use(express.json());
 
 // Database connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -33,10 +46,27 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/auth', authRoutes);
 app.use('/clients', clientRoutes);
 app.use('/engines', engineRoutes);
-app.use('/routes', routeRoutes);
 app.use('/schedules', scheduleRoutes);
 app.use('/trains', trainRoutes);
-app.use('/api/best-clicks', bestClicksRoutes);
+app.use('/routes', routeRoutes);
+app.use('/maintenance-alerts', maintenanceAlertRoutes);
+app.use('/crowding-info', crowdingInfoRoutes);
+app.use('/best-clicks', bestClicksRoutes);
+app.use('/lost-found', lostFoundRoutes);
+app.use('/news', newsRoutes);
+app.use('/location', locationRoutes);
+app.use('/retry', retryRoutes);
+app.use('/network-reliability', networkReliabilityRoutes);
+app.use('/users', userRoutes);
+app.use('/api-keys', apiKeyRoutes);
+app.use('/logs', logRoutes);
+app.use('/alerts', alertRoutes);
+app.use('/health-check', healthCheckRoutes);
+app.use('/location-cache', locationCacheRoutes);
+app.use('/monitoring', monitoringRoutes);
+app.use('/optimization', optimizationRoutes);
+app.use('/security', securityRoutes);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
