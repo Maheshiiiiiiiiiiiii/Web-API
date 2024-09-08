@@ -4,8 +4,8 @@ const authController = require('../controllers/authController'); // Ensure this 
 const verifyToken = require('../middleware/verifyToken'); // Import the verifyToken middleware
 
 // Public routes
-router.post('/login', authController.login);
-router.post('/register', authController.register);
+router.post('/login', authController.loginClient);
+router.post('/register', authController.registerClient);
 
 // Protected routes
 router.get('/profile', verifyToken, authController.getProfile);
