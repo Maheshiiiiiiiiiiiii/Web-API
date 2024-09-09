@@ -9,6 +9,6 @@ router.post('/register', authController.registerClient);
 
 // Protected routes
 router.get('/profile', verifyToken, authController.getProfile);
-router.post('/update', verifyToken, authController.updateProfile);
+router.put('/update', verifyToken, authController.updateProfile);
 
 module.exports = router;

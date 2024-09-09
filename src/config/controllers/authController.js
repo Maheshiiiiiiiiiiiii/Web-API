@@ -39,7 +39,7 @@ exports.registerClient = async (req, res) => {
       token: generateToken(client._id)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating client', error });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
