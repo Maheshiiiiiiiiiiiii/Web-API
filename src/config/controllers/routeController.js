@@ -12,7 +12,6 @@ exports.createRoute = async (req, res) => {
             stops,
             trains
         });
-
         await newRoute.save();
         res.status(201).json({ message: 'Route created successfully', route: newRoute });
     } catch (error) {

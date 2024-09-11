@@ -35,29 +35,29 @@ connectDB();
 
 app.use(bodyParser.json());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/clients', clientRoutes);
-app.use('/api/engines', engineRoutes);
-app.use('/api/schedules', scheduleRoutes);
-app.use('/api/trains', trainRoutes);
+app.use('/api/auth', authRoutes);//same as the client routes only update route added /* that middle ware part is confusing why use another model as user 
+app.use('/api/clients', clientRoutes); 
+app.use('/api/engines', engineRoutes); // check router.put '/trains/:train_id/engine
+app.use('/api/schedules', scheduleRoutes); // check router.post '/schedules (may be postman payloads' sample data structure)'
+app.use('/api/trains', trainRoutes);// check the purpose of other routes that I didnot comment ok
 app.use('/api/routes', routeRoutes);
-app.use('/api/maintenance-alerts', maintenanceAlertRoutes);
+app.use('/api/maintenance-alerts', maintenanceAlertRoutes);// should be updated psotman routes ---
 app.use('/api/crowding-info', crowdingInfoRoutes); 
-app.use('/api/best-clicks', bestClicksRoutes);
+app.use('/api/best-clicks', bestClicksRoutes);// check postman request for adding picture 
 app.use('/api/lost-found', lostFoundRoutes);
 app.use('/api/news', newsRoutes);
-app.use('/api/location', locationRoutes);
+app.use('/api/location', locationRoutes);// Ensure Redis Client Initialization
 app.use('/api/retry', retryRoutes); 
 app.use('/api/network-reliability', networkReliabilityRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes); // a problem  with comparing hash password with regular password
 app.use('/api/api-keys', apiKeyRoutes);
 app.use('/api/logs', logRoutes);
-app.use('/api/alerts', alertRoutes);
-app.use('/api/health-check', healthCheckRoutes);
+app.use('/api/alerts', alertRoutes);// check postman request for adding record
+app.use('/api/health-check', healthCheckRoutes);// always give "status": "Healthy" as defoult response
 app.use('/api/location-cache', locationCacheRoutes);
-app.use('/api/monitoring', monitoringRoutes);
+app.use('/api/monitoring', monitoringRoutes);// log record is not created
 app.use('/api/optimization', optimizationRoutes);
-app.use('/api/security', securityRoutes);
+app.use('/api/security', securityRoutes);// did not work properly due to client and user model conflict
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -97,10 +97,12 @@ exports.getProfile = async (req, res) => {
 // Update profile of the logged-in client
 exports.updateProfile = async (req, res) => {
   const { name, email, password } = req.body;
-  //const clientId = req.userId; // Assumes req.user is populated by middleware
+  console.log('Request body:', req.body);
+
+  const clientId = req.userId; // Assumes req.user is populated by middleware
 
   try {
-    const client = await Client.findById(email);
+    const client = await Client.findById(req.email);
 
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });

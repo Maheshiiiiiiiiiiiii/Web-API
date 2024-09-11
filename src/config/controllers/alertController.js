@@ -1,22 +1,34 @@
+const mongoose = require('mongoose');
 const MaintenanceAlert = require('../models/MaintenanceAlert');
+const Train = require('../models/Train');
 
 exports.createAlert = async (req, res) => {
     const { trainId, description, alertDate } = req.body;
+    console.log("data",req.body);
 
     try {
         const alert = new MaintenanceAlert({
-            trainId,
+            trainId: mongoose.Types.ObjectId(trainId),
             description,
             alertDate,
         });
 
         await alert.save();
+        console.log("saved data",alert);
         res.status(201).json(alert);
     } catch (error) {
         res.status(500).json({ message: 'Error creating alert', error });
     }
 };
 
+exports.getAllAlerts = async (req, res) => {
+    try {
+        const alerts = await MaintenanceAlert.find();
+        res.status(200).json(alerts);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching alerts', error });
+    }
+};
 exports.getAllAlerts = async (req, res) => {
     try {
         const alerts = await MaintenanceAlert.find();

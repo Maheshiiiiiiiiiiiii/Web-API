@@ -8,7 +8,7 @@ router.post('/login', authController.loginClient);
 router.post('/register', authController.registerClient);
 
 // Protected routes
-router.get('/profile', verifyToken, authController.getProfile);
+router.get('/profile', verifyToken, authController.getProfile);// getProfile function is not working that middle ware part is useless 
 router.put('/update', verifyToken, authController.updateProfile);
 
 module.exports = router;

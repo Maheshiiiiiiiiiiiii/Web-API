@@ -3,6 +3,10 @@ const BestClick = require('../models/BestClick');
 exports.createBestClick = async (req, res) => {
     try {
         const { route, place, date, time } = req.body;
+
+        if (!req.file) {
+            return res.status(400).json({ message: 'File is required' });
+        }
         const photoUrl = `/assets/uploads/${req.file.filename}`;
 
         const newBestClick = new BestClick({

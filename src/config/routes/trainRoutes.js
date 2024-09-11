@@ -19,9 +19,9 @@ const router = express.Router();
 router.post('/:id/location', verifyToken, receiveGPSData); // post received data to my backend db
 
 // API train details 
-router.get('/data', verifyToken, fetchTrainData);
-router.get('/data/:id', verifyToken, fetchSpecificTrainData);
-router.get('/location-history/:id', verifyToken, fetchTrainLocationHistory);
+router.get('/data', verifyToken, fetchTrainData);//ok
+router.get('/data/:id', verifyToken, fetchSpecificTrainData);//ok
+router.get('/location-history/:id', verifyToken, fetchTrainLocationHistory);//ok
 router.post('/change-engine/:id', verifyToken, changeEngine); // remove
 
 // Uncommented routes with verifyToken middleware

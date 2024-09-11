@@ -1,4 +1,5 @@
-const express = require('express');
+/*
+1const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -43,8 +44,8 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 
-app.use('/auth', authRoutes);
-app.use('/clients', clientRoutes);
+app.use('/auth', authRoutes); // done
+app.use('/clients', clientRoutes);// done
 app.use('/engines', engineRoutes);
 app.use('/schedules', scheduleRoutes);
 app.use('/trains', trainRoutes);
@@ -60,7 +61,7 @@ app.use('/network-reliability', networkReliabilityRoutes);
 app.use('/users', userRoutes);
 app.use('/api-keys', apiKeyRoutes);
 app.use('/logs', logRoutes);
-app.use('/alerts', alertRoutes);
+app.use('/alerts', alertRoutes);//done
 app.use('/health-check', healthCheckRoutes);
 app.use('/location-cache', locationCacheRoutes);
 app.use('/monitoring', monitoringRoutes);
@@ -71,3 +72,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+*/
