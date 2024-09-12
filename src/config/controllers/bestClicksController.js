@@ -1,34 +1,80 @@
-const BestClick = require('../models/BestClick');
+const BestClick = require('../models/BestClick'); 
+const multer = require('multer');
+const path = require('path');
 
-exports.createBestClick = async (req, res) => {
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+// Fetch all best click photos
+exports.getBestClickPhotos = async (req, res) => {
     try {
-        const { route, place, date, time } = req.body;
+        const photos = await BestClick.find();
+        res.json(photos);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching best click photos' });
+    }
+};
 
-        if (!req.file) {
-            return res.status(400).json({ message: 'File is required' });
+// Approve a photo
+exports.approvePhoto = async (req, res) => {
+    
+    try {
+        const { id } = req.body;
+        const photo = await BestClick.findById(id);
+        if (!photo) {
+            return res.status(404).json({ error: 'Photo not found' });
         }
-        const photoUrl = `/assets/uploads/${req.file.filename}`;
-
-        const newBestClick = new BestClick({
-            route,
-            place,
-            date,
-            time,
-            photoUrl,
-        });
-
-        const savedBestClick = await newBestClick.save();
-        res.status(201).json(savedBestClick);
+        photo.approved = true;
+        await photo.save();
+        res.json({ success: true, message: 'Photo approved successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error });
+        res.status(500).json({ error: 'Error approving photo' });
     }
 };
 
-exports.getBestClicks = async (req, res) => {
+// Delete a photo
+exports.deletePhoto = async (req, res) => {
     try {
-        const bestClicks = await BestClick.find().sort({ createdAt: -1 });
-        res.status(200).json(bestClicks);
+        const { id } = req.body;
+        const photo = await BestClick.findById(id);
+        if (!photo) {
+            return res.status(404).json({ error: 'Photo not found' });
+        }
+        await photo.remove();
+        res.json({ success: true, message: 'Photo deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error });
+        res.status(500).json({ error: 'Error deleting photo' });
     }
 };
+
+// Upload a new best click photo
+exports.uploadBestClick = [
+    upload.single('image'),
+    async (req, res) => {
+        try {
+            const { trainName, date, time, place } = req.body;
+            const imagePath = req.file.path;
+
+            const newBestClick = new BestClick({
+                imagePath: imagePath,
+                trainName: trainName,
+                date: date,
+                time: time,
+                place: place
+            });
+
+            await newBestClick.save();
+            res.json({ success: true, message: 'Image uploaded successfully!', imagePath: imagePath });
+        } catch (error) {
+            res.status(500).json({ error: 'Error uploading image' });
+        }
+    }
+];

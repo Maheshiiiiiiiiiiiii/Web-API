@@ -1,56 +1,63 @@
-const News = require('../models/news');
+const News = require('../models/newsModel'); // Assuming you have a News model
 
-exports.createNews = async (req, res) => {
-    const { title, content, author } = req.body;
+// Fetch all news updates
+exports.getNewsUpdates = async (req, res) => {
     try {
-        const newNews = new News({ title, content, author });
-        await newNews.save();
-        res.status(201).json({ message: 'News created successfully', news: newNews });
+        const newsUpdates = await News.find();
+        res.json(newsUpdates);
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while creating news' });
+        res.status(500).json({ message: 'Error fetching news updates', error });
     }
 };
 
-exports.getAllNews = async (req, res) => {
+// Approve a news update
+exports.approveNewsUpdate = async (req, res) => {
     try {
-        const news = await News.find().sort({ createdAt: -1 });
-        res.status(200).json(news);
+        const newsUpdate = await News.findById(req.params.id);
+        if (!newsUpdate) {
+            return res.status(404).json({ message: 'News update not found' });
+        }
+        newsUpdate.approved = true;
+        await newsUpdate.save();
+        res.json({ message: 'News update approved', newsUpdate });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while retrieving news' });
+        res.status(500).json({ message: 'Error approving news update', error });
     }
 };
 
-exports.getNewsById = async (req, res) => {
+// Delete a news update
+exports.deleteNewsUpdate = async (req, res) => {
     try {
-        const news = await News.findById(req.params.id);
-        if (!news) return res.status(404).json({ message: 'News not found' });
-        res.status(200).json(news);
+        const newsUpdate = await News.findById(req.params.id);
+        if (!newsUpdate) {
+            return res.status(404).json({ message: 'News update not found' });
+        }
+        await newsUpdate.remove();
+        res.json({ message: 'News update deleted' });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while retrieving news' });
+        res.status(500).json({ message: 'Error deleting news update', error });
     }
 };
 
-exports.updateNews = async (req, res) => {
-    try {
-        const { title, content } = req.body;
-        const news = await News.findByIdAndUpdate(
-            req.params.id,
-            { title, content },
-            { new: true, runValidators: true }
-        );
-        if (!news) return res.status(404).json({ message: 'News not found' });
-        res.status(200).json({ message: 'News updated successfully', news });
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while updating news' });
-    }
-};
+// Create a new news update
+exports.createNewsUpdate = async (req, res) => {
+    const { title, content, author, date } = req.body;
 
-exports.deleteNews = async (req, res) => {
+    if (!title || !content || !author || !date) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
     try {
-        const news = await News.findByIdAndDelete(req.params.id);
-        if (!news) return res.status(404).json({ message: 'News not found' });
-        res.status(200).json({ message: 'News deleted successfully' });
+        const newNewsUpdate = new News({
+            title,
+            content,
+            author,
+            date
+        });
+
+        await newNewsUpdate.save();
+        res.status(201).json({ message: 'News update created', newNewsUpdate });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while deleting news' });
+        res.status(500).json({ message: 'Error creating news update', error });
     }
 };

@@ -1,39 +1,60 @@
 const CrowdingInfo = require('../models/CrowdingInfo');
 const Train = require('../models/Train');
 
-const addCrowdingInfo = async (req, res) => {
-  try {
-    const { trainId, crowdingLevel, timestamp } = req.body;
-    const train = await Train.findById(trainId);
-    if (!train) {
-      return res.status(404).json({ message: 'Train not found' });
+// Fetch all crowding information
+exports.getCrowdingInfo = async (req, res) => {
+    try {
+        const crowdingInfo = await CrowdingInfo.find();
+        res.status(200).json(crowdingInfo);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching crowding info', error });
     }
-
-    const crowdingInfo = new CrowdingInfo({ train: trainId, crowdingLevel, timestamp });
-    await crowdingInfo.save();
-
-    res.status(201).json({ message: 'Crowding info added', crowdingInfo });
-  } catch (error) {
-    res.status(500).json({ message: 'Error adding crowding info', error });
-  }
 };
 
-const getCrowdingInfo = async (req, res) => {
-  try {
-    const { trainId } = req.params;
-    const crowdingInfo = await CrowdingInfo.find({ train: trainId }).sort({ timestamp: -1 });
-
-    if (!crowdingInfo.length) {
-      return res.status(404).json({ message: 'No crowding info found' });
+// Approve a specific crowding information entry
+exports.approveCrowdingInfo = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const updatedInfo = await CrowdingInfo.findByIdAndUpdate(id, { approved: true }, { new: true });
+        if (!updatedInfo) {
+            return res.status(404).json({ message: 'Crowding info not found' });
+        }
+        res.status(200).json(updatedInfo);
+    } catch (error) {
+        res.status(500).json({ message: 'Error approving crowding info', error });
     }
-
-    res.status(200).json(crowdingInfo);
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving crowding info', error });
-  }
 };
 
-module.exports = {
-  addCrowdingInfo,
-  getCrowdingInfo,
+// Delete a specific crowding information entry
+exports.deleteCrowdingInfo = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deletedInfo = await CrowdingInfo.findByIdAndDelete(id);
+        if (!deletedInfo) {
+            return res.status(404).json({ message: 'Crowding info not found' });
+        }
+        res.status(200).json({ message: 'Crowding info deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting crowding info', error });
+    }
+};
+
+// Create a new crowding information entry
+exports.createCrowdingInfo = async (req, res) => {
+  const { train, firstClass, secondClass, thirdClass } = req.body;
+  try {
+      const newCrowdingInfo = new CrowdingInfo({ 
+          trainId: train, 
+          crowdingLevels: {
+              firstClass: firstClass,
+              secondClass: secondClass,
+              thirdClass: thirdClass
+          },
+          timestamp: new Date() // Assuming you want to set the current timestamp
+      });
+      await newCrowdingInfo.save();
+      res.status(201).json(newCrowdingInfo);
+  } catch (error) {
+      res.status(500).json({ message: 'Error creating crowding info', error });
+  }
 };

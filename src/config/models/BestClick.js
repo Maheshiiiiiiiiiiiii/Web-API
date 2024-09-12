@@ -17,8 +17,8 @@ const bestClickSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    photoUrl: {
-        type: String,
+    photo: {
+        type: String, // This will store the file path of the uploaded photo
         required: true,
     },
     createdAt: {

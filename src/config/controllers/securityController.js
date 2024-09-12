@@ -1,6 +1,6 @@
 const ApiKey = require('../models/apiKey');
 const crypto = require('crypto');
-const User = require('../models/User');  // Assuming you have a User model for OAuth logic
+const User = require('../models/Client');  // Assuming you have a User model for OAuth logic
 
 // Function to generate a new API key
 exports.generateApiKey = async (req, res) => {
