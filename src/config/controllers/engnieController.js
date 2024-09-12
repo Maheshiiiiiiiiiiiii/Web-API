@@ -93,7 +93,15 @@ const changeEngine = async (req, res) => {
       return res.status(404).json({ error: "Engine not found" });
     }
 
+    if (train.primary_engine === null) {
+      train.primary_engine = newEngine._id;
+    } else if (train.secondary_engine === null) {
+      train.secondary_engine = newEngine._id;
+    } else {
+      return res.status(400).json({ error: "Train already has two engines" });
+    }
     train.primary_engine = newEngine._id;
+
     console.log("found train", train);
 
     await train.save();
