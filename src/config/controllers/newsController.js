@@ -1,4 +1,4 @@
-const News = require('../models/newsModel'); // Assuming you have a News model
+const News = require('../models/news'); 
 
 // Fetch all news updates
 exports.getNewsUpdates = async (req, res) => {
@@ -7,6 +7,19 @@ exports.getNewsUpdates = async (req, res) => {
         res.json(newsUpdates);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching news updates', error });
+    }
+};
+
+// Fetch a single news update by ID
+exports.getNewsById = async (req, res) => {
+    try {
+        const newsUpdate = await News.findById(req.params.id);
+        if (!newsUpdate) {
+            return res.status(404).json({ message: 'News update not found' });
+        }
+        res.json(newsUpdate);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching news update', error });
     }
 };
 
@@ -59,5 +72,26 @@ exports.createNewsUpdate = async (req, res) => {
         res.status(201).json({ message: 'News update created', newNewsUpdate });
     } catch (error) {
         res.status(500).json({ message: 'Error creating news update', error });
+    }
+};
+
+// Update a news update
+exports.updateNews = async (req, res) => {
+    try {
+        const newsUpdate = await News.findById(req.params.id);
+        if (!newsUpdate) {
+            return res.status(404).json({ message: 'News update not found' });
+        }
+
+        const { title, content, author, date } = req.body;
+        newsUpdate.title = title || newsUpdate.title;
+        newsUpdate.content = content || newsUpdate.content;
+        newsUpdate.author = author || newsUpdate.author;
+        newsUpdate.date = date || newsUpdate.date;
+
+        await newsUpdate.save();
+        res.json({ message: 'News update updated', newsUpdate });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating news update', error });
     }
 };
