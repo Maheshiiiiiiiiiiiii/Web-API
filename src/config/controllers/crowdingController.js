@@ -43,9 +43,9 @@ exports.deleteCrowdingInfo = async (req, res) => {
 exports.createCrowdingInfo = async (req, res) => {
   const { train, firstClass, secondClass, thirdClass } = req.body;
   try {
-      const newCrowdingInfo = new CrowdingInfo({ 
+    const newCrowdingInfo = new CrowdingInfo({ 
           trainId: train, 
-          crowdingLevels: {
+          crowdingLevels: { 
               firstClass: firstClass,
               secondClass: secondClass,
               thirdClass: thirdClass
@@ -55,6 +55,6 @@ exports.createCrowdingInfo = async (req, res) => {
       await newCrowdingInfo.save();
       res.status(201).json(newCrowdingInfo);
   } catch (error) {
-      res.status(500).json({ message: 'Error creating crowding info', error });
+      res.status(500).json({ message: 'Error creating crowding info', error: error.message });
   }
 };
