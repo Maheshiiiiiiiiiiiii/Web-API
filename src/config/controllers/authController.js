@@ -16,30 +16,54 @@ const generateToken = (id) => {
 };
 
 // Register a new client
+
 exports.registerClient = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { username, email, contact, password, confirmPassword } = req.body;
+
+  // Validate input data
+  if (!username || !email || !contact || !password || !confirmPassword) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  // Check if passwords match
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
 
   try {
-    const clientExists = await Client.findOne({ email });
-
-    if (clientExists) {
-      return res.status(400).json({ message: 'Client already exists' });
+    // Check if the email is already registered
+    const existingClient = await Client.findOne({ email });
+    if (existingClient) {
+      return res.status(400).json({ message: 'Email is already registered' });
     }
 
-    // Hash the password before saving
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const createdAt = new Date(); // Get the current date
-    const client = await Client.create({ name, email, password: hashedPassword, createdAt });
 
+    // Create a new client
+    const newClient = new Client({
+      username,
+      email,
+      contact,
+      password: hashedPassword,
+      createdAt: new Date(), // Set the creation date
+    });
+
+    // Save the client to the database
+    await newClient.save();
+
+    // Respond with success message
     res.status(201).json({
-      _id: client._id,
-      name: client.name,
-      email: client.email,
-      createdAt: client.createdAt,
-      token: generateToken(client._id)
+      _id: newClient._id,
+      username: newClient.username,
+      email: newClient.email,
+      contact: newClient.contact,
+      createdAt: newClient.createdAt,
+      token: generateToken(newClient._id),
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error during client registration:", error);
+    res.status(500).json({ message: 'Error registering client', error });
   }
 };
 
@@ -47,29 +71,33 @@ exports.loginClient = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Find the client by email
     const client = await Client.findOne({ email });
-
     if (!client) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    const isMatch = await bcrypt.hash(password, client.password);
+    // Compare the provided password with the hashed password
+    const isMatch = await bcrypt.compare(password, client.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
+    // Respond with success message
     res.status(200).json({
       _id: client._id,
-      name: client.name,
+      username: client.username,
       email: client.email,
+      contact: client.contact,
       token: generateToken(client._id),
     });
   } catch (error) {
-    console.error("Error during password comparison:", error);
+    console.error("Error during login:", error);
     res.status(500).json({ message: 'Error logging in client', error });
   }
 };
+
 
 // Get profile of the logged-in client
 exports.getProfile = async (req, res) => {

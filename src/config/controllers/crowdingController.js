@@ -14,14 +14,15 @@ exports.getCrowdingInfo = async (req, res) => {
 // Approve a specific crowding information entry
 exports.approveCrowdingInfo = async (req, res) => {
     const { id } = req.params;
+    const { crowdingLevel } = req.body;
     try {
-        const updatedInfo = await CrowdingInfo.findByIdAndUpdate(id, { approved: true }, { new: true });
+        const updatedInfo = await CrowdingInfo.findByIdAndUpdate(id,{crowdingLevel: crowdingLevel});
         if (!updatedInfo) {
             return res.status(404).json({ message: 'Crowding info not found' });
         }
         res.status(200).json(updatedInfo);
     } catch (error) {
-        res.status(500).json({ message: 'Error approving crowding info', error });
+        res.status(500).json({ message: 'Error approving crowding info', error: error.message });
     }
 };
 

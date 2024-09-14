@@ -123,6 +123,24 @@ exports.getTrainById = async (req, res) => {
   }
 };
 
+// Update Train Live
+exports.updateTrainLive = async (req, res) => {
+  const { id } = req.params;
+  const { lat, lng } = req.body;
+
+  try {
+    const train = await Train.findById(id);
+    train.current_location = [lat, lng]
+    await train.updateOne(id);
+    if (!train) {
+      return res.status(404).json({ error: 'Train not found' });
+    }
+    res.status(200).json(train);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch train' });
+  }
+};
+
 // Update Train
 exports.updateTrain = async (req, res) => {
   const { id } = req.params;
