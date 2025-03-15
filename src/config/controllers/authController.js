@@ -18,10 +18,10 @@ const generateToken = (id) => {
 // Register a new client
 
 exports.registerClient = async (req, res) => {
-  const { username, email, contact, password, confirmPassword } = req.body;
+  const { name, username, email, contact, password, confirmPassword } = req.body;
 
   // Validate input data
-  if (!username || !email || !contact || !password || !confirmPassword) {
+  if (!name || !username || !email || !contact || !password || !confirmPassword) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
@@ -42,6 +42,7 @@ exports.registerClient = async (req, res) => {
 
     // Create a new client
     const newClient = new Client({
+      name,
       username,
       email,
       contact,
@@ -52,17 +53,8 @@ exports.registerClient = async (req, res) => {
     // Save the client to the database
     await newClient.save();
 
-    // Respond with success message
-    res.status(201).json({
-      _id: newClient._id,
-      username: newClient.username,
-      email: newClient.email,
-      contact: newClient.contact,
-      createdAt: newClient.createdAt,
-      token: generateToken(newClient._id),
-    });
+    res.status(201).json({ message: 'Client registered successfully' });
   } catch (error) {
-    console.error("Error during client registration:", error);
     res.status(500).json({ message: 'Error registering client', error });
   }
 };
