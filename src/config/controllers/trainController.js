@@ -10,22 +10,58 @@ exports.receiveGPSData = async (req, res) => {
   const { latitude, longitude, speed, direction, timestamp } = req.body;
 
   try {
+    // Validate required fields
+    if (!latitude || !longitude) {
+      return res.status(400).json({ error: 'Latitude and longitude are required' });
+    }
+
+    // Validate data types
+    if (isNaN(latitude) || isNaN(longitude)) {
+      return res.status(400).json({ error: 'Latitude and longitude must be numbers' });
+    }
+
+    // Find the train to get its primary engine
+    const train = await Train.findById(id);
+    if (!train) {
+      return res.status(404).json({ error: 'Train not found' });
+    }
+
+    if (!train.primary_engine) {
+      return res.status(400).json({ error: 'Train has no primary engine assigned' });
+    }
+
     const location = new Location({
       location_id: uuidv4(),
       train_id: id,
+      engine_id: train.primary_engine.toString(),
       timestamp: timestamp || new Date(),
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      speed: speed ? parseFloat(speed) : 0,
+      direction: direction ? parseFloat(direction) : 0,
+    });
+
+    console.log('Attempting to save location data:', {
+      train_id: id,
+      engine_id: train.primary_engine,
       latitude,
       longitude,
       speed,
       direction,
+      timestamp: location.timestamp
     });
 
-    // Attempt to save the location with retry mechanism
-    await networkRetryHandler(async () => await location.save());
+    // Save the location directly
+    await location.save();
 
+    console.log('Location data saved successfully');
     res.status(201).json(location);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to save location data' });
+    console.error('Error saving location data:', error);
+    res.status(500).json({ 
+      error: 'Failed to save location data',
+      details: error.message 
+    });
   }
 };
 
