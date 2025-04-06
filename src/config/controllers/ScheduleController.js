@@ -7,63 +7,81 @@ const { v4: uuidv4 } = require("uuid");
 
 const getSchedules = async (req, res) => {
   try {
-    const schedules = await Schedule.find();
+    const schedules = await Schedule.find().populate('train');
     res.status(200).json(schedules);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch schedules" });
+    console.error('Error fetching schedules:', error);
+    res.status(500).json({ error: 'Failed to fetch schedules', details: error.message });
   }
 };
 
 const getScheduleById = async (req, res) => {
   const { id } = req.params;
   try {
-    const schedule = await Schedule.findById(id);
+    const schedule = await Schedule.findById(id).populate('train');
     if (!schedule) {
       return res.status(404).json({ error: "Schedule not found" });
     }
     res.status(200).json(schedule);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch schedule" });
+    console.error('Error fetching schedule:', error);
+    res.status(500).json({ error: 'Failed to fetch schedule', details: error.message });
   }
 };
 
 const addSchedule = async (req, res) => {
-  const { train_id, date, day, frequency, special } = req.body;
-
   try {
-    const train = await Train.findById(train_id);
-    if (!train) {
-      return res.status(404).json({ error: "Train not found" });
+    const { train_id, route, departureTime, arrivalTime, date, day, frequency, special } = req.body;
+
+    // Validate required fields
+    if (!train_id || !route || !departureTime || !arrivalTime || !date || !day || !frequency) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const schedule = new Schedule({
-      ...req.body,
+      train_id,
+      route,
+      departureTime: new Date(departureTime),
+      arrivalTime: new Date(arrivalTime),
+      date: new Date(date),
+      day,
+      frequency,
+      special: special || false
     });
-    console.log("schedule", schedule);
 
     await schedule.save();
     res.status(201).json(schedule);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error creating schedule:', error);
+    res.status(500).json({ error: 'Failed to create schedule', details: error.message });
   }
 };
 
 const updateSchedule = async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body;
+  const { train_id, route, departureTime, arrivalTime, date, day, frequency, special } = req.body;
 
+  const { id } = req.params;
   try {
-    const schedule = await Schedule.findByIdAndUpdate(id, updates, {
-      new: true,
-    });
+    const schedule = await Schedule.findById(id);
     if (!schedule) {
-      return res.status(404).json({ message: "Schedule not found" });
+      return res.status(404).json({ error: 'Schedule not found' });
     }
-    res
-      .status(200)
-      .json({ message: "Schedule updated successfully", schedule });
+
+    // Update fields if provided
+    if (train_id) schedule.train_id = train_id;
+    if (route) schedule.route = route;
+    if (departureTime) schedule.departureTime = new Date(departureTime);
+    if (arrivalTime) schedule.arrivalTime = new Date(arrivalTime);
+    if (date) schedule.date = new Date(date);
+    if (day) schedule.day = day;
+    if (frequency) schedule.frequency = frequency;
+    if (special !== undefined) schedule.special = special;
+
+    await schedule.save();
+    res.status(200).json(schedule);
   } catch (error) {
-    res.status(500).json({ message: "Error updating schedule", error });
+    console.error('Error updating schedule:', error);
+    res.status(500).json({ error: 'Failed to update schedule', details: error.message });
   }
 };
 
@@ -73,11 +91,12 @@ const deleteSchedule = async (req, res) => {
   try {
     const schedule = await Schedule.findByIdAndDelete(id);
     if (!schedule) {
-      return res.status(404).json({ message: "Schedule not found" });
+      return res.status(404).json({ error: 'Schedule not found' });
     }
-    res.status(200).json({ message: "Schedule deleted successfully" });
+    res.status(200).json({ message: 'Schedule deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting schedule", error });
+    console.error('Error deleting schedule:', error);
+    res.status(500).json({ error: 'Failed to delete schedule', details: error.message });
   }
 };
 
